@@ -1,0 +1,215 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+#todo__list {
+  width: 100%;
+  height: 100vh;
+  background-image: linear-gradient(to right bottom, #0f0c29, #2a1fa6, #3535ad);
+  background-size: 200% 200%;
+  background-position: 0% 0%;
+  animation: backgroundColorAnime 10s linear infinite alternate;
+  display: flex;
+  flex-direction: column;
+  padding: 5vh 10vw;
+}
+
+@keyframes backgroundColorAnime {
+  0% {
+    background-position: 0;
+  }
+  100% {
+    background-position: 100%;
+  }
+}
+.Add__form {
+  width: 100%;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-around;
+}
+.Add__form > div {
+  width: 40%;
+  display: flex;
+  justify-content: space-between;
+  margin-right: 10px;
+  margin-bottom: 20px;
+  align-items: center;
+}
+.Add__form > div label {
+  color: #ffffff;
+  font-size: 23px;
+  font-family: "Trebuchet MS", "Lucida Sans Unicode", "Lucida Grande", "Lucida Sans", Arial, sans-serif;
+  width: 40%;
+  text-align: center;
+  text-transform: uppercase;
+}
+.Add__form > div input, .Add__form > div textarea, .Add__form > div select {
+  all: unset;
+  color: #0f0c29;
+  background: #ffffff;
+  width: 50%;
+  font-size: 23px;
+  border: 1px solid #ffffff;
+  border-radius: 10px;
+  padding: 10px 15px;
+  font-family: "Trebuchet MS", "Lucida Sans Unicode", "Lucida Grande", "Lucida Sans", Arial, sans-serif;
+}
+.Add__form button {
+  all: unset;
+  width: 20%;
+  margin-top: 30px;
+  font-size: 23px;
+  text-align: center;
+  padding: 20px;
+  color: #0f0c29;
+  background: #ffffff;
+  text-transform: uppercase;
+  border-radius: 40px;
+  font-family: "Trebuchet MS", "Lucida Sans Unicode", "Lucida Grande", "Lucida Sans", Arial, sans-serif;
+}
+
+.cards__container{
+  margin-top: 5vh;
+  display: flex;
+  flex-wrap: wrap;
+}
+
+.empty__message{
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-top: 100px;
+}
+
+.empty__message h2{
+  text-transform: uppercase;
+}
+
+.empty__logo img{
+  mix-blend-mode: color-burn;
+  width: 200px;
+  color: #ffffff;
+  animation: ghostIconAnime 5s infinite alternate linear;
+}
+
+@keyframes ghostIconAnime {
+  0%{
+    translate: 0;
+  }
+  100%{
+    translate: 0 -100px;
+  }
+}
+
+.card{
+  width: 25%;
+  padding: 20px 40px;
+  border-radius: 30px 0 0 0;
+  display: flex;
+  flex-wrap: wrap;
+  background: rgba(255, 255, 255, 0.45);
+  box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
+  backdrop-filter: blur(4.7px);
+  -webkit-backdrop-filter: blur(4.7px);
+  position: relative;
+  gap: 20px;
+}
+
+.card--header{
+  font-size: 23px;
+  text-transform: uppercase;
+  font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
+  width: 100%;
+  color: #0f0c29;
+}
+
+.card--importance{
+  position: absolute;
+  top: 0;
+  right: 0;
+  width: 60px;
+  height: 60px;
+  border-radius: 0 0 0 30px;
+  background: #3535ad;
+  color: #ffffff;
+  font-size: 20px;
+  text-align: center;
+  padding-top: 15px;
+}
+
+.card--time{
+  font-size: 23px;
+  color: #0f0c29;
+  font-weight: bold;
+}
+
+.readMore{
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+  width: 100%;
+  margin-bottom: 40px;
+}
+
+.readMore--button{
+  all: unset;
+  border: 1px solid #0f0c29;
+  padding: 5px 30px;
+  border-radius: 30px;
+  text-transform: uppercase;
+  transition: .5s;
+}
+
+.readMore--button:hover{
+  background: rgba(255, 255, 255, 0.2);
+}
+
+
+.readMore--text{
+  all: unset;
+  text-align: justify;
+}
+
+.d-none{
+  display: none;
+}
+
+.card__setting button{
+  border: none;
+  padding: 16px 0px;
+  font-size: 17px;
+  width: 40%;
+  text-transform: uppercase;
+  text-align: center;
+  color: #ffffff;
+  transition: .5s;
+}
+
+.card__setting--edit{
+  position: absolute;
+  left: 0;
+  bottom: 0;
+  background: #4f4fa3;
+  border-radius: 0 20px 0 0;
+}
+
+.card__setting--edit:hover{
+  background: #2c2c91;
+}
+
+.card__setting--remove{
+  position: absolute;
+  right: 0;
+  bottom: 0;
+  background: #ff0000;
+  border-radius: 20px 0 0 0;
+}
+
+.card__setting--remove:hover{
+  background: #b10404;
+}
