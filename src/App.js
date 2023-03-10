@@ -2,7 +2,7 @@ import './App.css';
 import { useState } from 'react';
 import ghostImage from "./image/ghost__image.jpg";
 
-function AddWorks({ inputsValue, setInputsValue, cards, setCards, id, setid }) {
+function AddWorks({ inputsValue, setInputsValue, cards, setCards, id, setId }) {
   const ImportanceOption = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
 
   function handleChange(target) {
@@ -28,7 +28,7 @@ function AddWorks({ inputsValue, setInputsValue, cards, setCards, id, setid }) {
           }
         ])
 
-        setid(id + 1);
+        setId(id + 1);
         
         // setInputsValue({
         //   titleInput: "",
@@ -110,7 +110,14 @@ function AddWorks({ inputsValue, setInputsValue, cards, setCards, id, setid }) {
   );
 }
 
-function ShowWorks({ cards, setCards }) {
+function ShowWorks({ cards, setCards, editingIdCard, setEditingIdCard, editInputsValue, setEditInputsValue }) {
+  function handleChangeNewCard(target) {
+    setEditInputsValue({
+      ...editInputsValue,
+      [target.name]: target.value
+    });
+  }
+
   if(cards.length === 0){
     // without card message
     return(
@@ -129,8 +136,10 @@ function ShowWorks({ cards, setCards }) {
     // with card message
     return(
       <div className='cards__container'>
-        {cards.map((card) => (
-          <div key={card.id} className='card'>
+        {cards.map((card) => {
+         if(editingIdCard !== card.id){
+          return(
+            <div key={card.id} className='card'>
             <h3 className='card--header'>{card.cardTitle}</h3>
             <span className='card--importance'>{card.cardImportance}/10</span>
             <div className='card--time'>{card.cardTime}</div>
@@ -142,10 +151,10 @@ function ShowWorks({ cards, setCards }) {
                   onClick={() => {
                     const ReadMoreText = document.querySelector(`.readMore--text--${card.id}`);
                     const ReadMoreButton = document.querySelector(`.readMore--button--${card.id}`);
-
+  
                     // at first i changed the text style
                     ReadMoreText.classList.toggle("d-none");
-
+  
                     // and second i will check it for my button text content
                     if(ReadMoreText.className.includes("d-none")){
                       ReadMoreButton.textContent = "read more";
@@ -159,7 +168,14 @@ function ShowWorks({ cards, setCards }) {
               </div>
             }
             <div className='card__setting'>
-              <button className='card__setting--edit'>edit</button>
+              <button 
+                className='card__setting--edit'
+                onClick={() => {
+                  setEditingIdCard(card.id)
+                }}
+              >
+                  edit
+              </button>
               <button 
                 className='card__setting--remove'
                 onClick={(e) => {
@@ -169,10 +185,62 @@ function ShowWorks({ cards, setCards }) {
                     )
                   )
                 }}
-              >remove</button>
+              >
+                remove
+              </button>
             </div>
-          </div>
-        ))}
+            </div>
+          );
+         }else{
+          
+          setEditInputsValue({
+            ...editInputsValue,
+            id: card.id
+          });
+
+          return(
+            <div key={card.id} className='card'>
+            <input 
+              value={editInputsValue.cardTitle}
+              name={"cardTitle"}
+              onChange={(e) => {handleChangeNewCard(e.target, card.id)}}
+            />
+            <input 
+              type={"number"} 
+              min={0} max={10} 
+              name={"cardImportance"}
+              value={editInputsValue.cardImportance}
+              onChange={(e) => {handleChangeNewCard(e.target, card.id)}}
+            />
+            <input 
+              type={'time'}
+              name={"cardTime"}
+              value={editInputsValue.cardTime}
+              onChange={(e) => {handleChangeNewCard(e.target, card.id)}}
+            />
+            <textarea 
+              value={editInputsValue.cardExplanation}
+              name={"cardExplanation"}
+              onChange={(e) => {handleChangeNewCard(e.target, card.id)}}
+            ></textarea>
+            <div className='card__setting'>
+              <button
+                onClick={() => {
+                  console.log(card.id);
+                  console.log(editInputsValue);
+                  setCards({
+                    ...cards,
+                    [cards[card.id]]: editInputsValue
+                  });
+                }}
+              >
+                save
+              </button>
+            </div>
+            </div>
+          );
+         }
+        })}
       </div>
     );
   }
@@ -180,17 +248,19 @@ function ShowWorks({ cards, setCards }) {
 
 export default function FunctionalTODOList() {
   const [cards, setCards] = useState([]);
-  const [id, setid] = useState(0);
-  // const [cards, setCards] = useState([
-  //   {cardTitle: 'go climbing', cardTime: '22:32', cardExplanation: 'i should go climbing for my health', cardImportance: '8', id: 0},
-  //   {cardTitle: 'go climbing', cardTime: '22:32', cardExplanation: 'i should go climbing for my health', cardImportance: '8', id: 1},
-  //   {cardTitle: 'go climbing', cardTime: '22:32', cardExplanation: 'i should go climbing for my health', cardImportance: '8', id: 2},
-  // ])
+  const [id, setId] = useState(0);
+  const [editingIdCard, setEditingIdCard] = useState(null);
   const [inputsValue, setInputsValue] = useState({
     titleInput: "",
     numberInput: "",
     textAreaInput: "",
     selectInput: "",
+  });
+  const [editInputsValue, setEditInputsValue] = useState({
+    cardTitle: '', 
+    cardImportance: '', 
+    cardTime: '', 
+    cardExplanation: ''
   });
 
   return(
@@ -199,12 +269,16 @@ export default function FunctionalTODOList() {
         inputsValue={inputsValue} 
         setInputsValue={setInputsValue} 
         id={id} 
-        setid={setid} 
+        setId={setId} 
         cards={cards} 
         setCards={setCards}/>
       <ShowWorks 
         cards={cards}
         setCards={setCards}
+        editingIdCard={editingIdCard}
+        setEditingIdCard={setEditingIdCard}
+        editInputsValue={editInputsValue}
+        setEditInputsValue={setEditInputsValue}
       />
     </div>
   );
