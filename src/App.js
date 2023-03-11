@@ -192,12 +192,6 @@ function ShowWorks({ cards, setCards, editingIdCard, setEditingIdCard, editInput
             </div>
           );
          }else{
-          
-          setEditInputsValue({
-            ...editInputsValue,
-            id: card.id
-          });
-
           return(
             <div key={card.id} className='card'>
             <input 
@@ -226,12 +220,31 @@ function ShowWorks({ cards, setCards, editingIdCard, setEditingIdCard, editInput
             <div className='card__setting'>
               <button
                 onClick={() => {
-                  console.log(card.id);
-                  console.log(editInputsValue);
-                  setCards({
-                    ...cards,
-                    [cards[card.id]]: editInputsValue
-                  });
+                  setEditingIdCard(null)
+
+                  let oldArrSituation;
+                  for(var i = 0; i < cards.length; i++){
+                    if(cards[i].id === card.id){
+                      oldArrSituation = i;
+                    }
+                  }
+
+                  // i want to clear my inputs
+                  setEditInputsValue({
+                      cardTitle: '', 
+                      cardImportance: '', 
+                      cardTime: '', 
+                      cardExplanation: ''
+                  })
+
+
+                  const newArr = [...cards];
+                  newArr[oldArrSituation] = editInputsValue
+
+
+                  setCards(newArr)
+
+                  console.log(oldArrSituation)
                 }}
               >
                 save
