@@ -30,12 +30,12 @@ function AddWorks({ inputsValue, setInputsValue, cards, setCards, id, setId }) {
 
         setId(id + 1);
         
-        // setInputsValue({
-        //   titleInput: "",
-        //   numberInput: "",
-        //   textAreaInput: "",
-        //   selectInput: "",
-        // });
+        setInputsValue({
+          titleInput: "",
+          numberInput: "",
+          textAreaInput: "",
+          selectInput: "",
+        });
       }else{
         alert("please fill 'work title', 'work time' and 'importance' (explanation is recommended).")
       }
@@ -140,18 +140,22 @@ function ShowWorks({ cards, setCards, editingIdCard, setEditingIdCard, editInput
     }
     if(filterStatus === "time"){
       CardsCopy = CardsCopy.sort((a, b) => {
-        if(a.cardTime.match(/(\d+)/g)[0] === b.cardTime.match(/(\d+)/g)[0]){
-          if(a.cardTime.match(/(\d+)/g)[1] - b.cardTime.match(/(\d+)/g)[1]){
+        let aHour = a.cardTime.match(/\d+(?=:)/g)[0][0] === "0" ? a.cardTime.match(/\d+(?=:)/g)[0][1] : a.cardTime.match(/\d+(?=:)/g)[0];
+        let aMinute = a.cardTime.match(/\d+(?!:)$/g)[0][0] === "0" ? a.cardTime.match(/\d+(?!:)$/g)[0][1] : a.cardTime.match(/\d+(?!:)$/g)[0];
+        
+        let bHour = b.cardTime.match(/\d+(?=:)/g)[0][0] === "0" ? b.cardTime.match(/\d+(?=:)/g)[0][1] : b.cardTime.match(/\d+(?=:)/g)[0];
+        let bMinute = b.cardTime.match(/\d+(?!:)$/g)[0][0] === "0" ? b.cardTime.match(/\d+(?!:)$/g)[0][1] : b.cardTime.match(/\d+(?!:)$/g)[0];
+
+        if(Number(aHour) > Number(bHour)){
+          return 1;
+        }else if(Number(bHour) > Number(aHour)){
+          return -1;
+        }else{
+          if(Number(aMinute) > Number(bMinute)){
             return 1;
           }else{
             return -1;
           }
-        }
-        if(a.cardTime.match(/(\d+)/g)[0] - b.cardTime.match(/(\d+)/g)[0]){
-          return 1
-        }
-        if(b.cardTime.match(/(\d+)/g)[0] - a.cardTime.match(/(\d+)/g)[0]){
-          return -1
         }
       });
     }
