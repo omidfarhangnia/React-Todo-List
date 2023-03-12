@@ -110,7 +110,7 @@ function AddWorks({ inputsValue, setInputsValue, cards, setCards, id, setId }) {
   );
 }
 
-function ShowWorks({ cards, setCards, editingIdCard, setEditingIdCard, editInputsValue, setEditInputsValue }) {
+function ShowWorks({ cards, setCards, editingIdCard, setEditingIdCard, editInputsValue, setEditInputsValue, filterStatus }) {
   function handleChangeNewCard(target) {
     setEditInputsValue({
       ...editInputsValue,
@@ -133,10 +133,32 @@ function ShowWorks({ cards, setCards, editingIdCard, setEditingIdCard, editInput
       </div>
     );
   }else{
+    let CardsCopy = [...cards]
+    // this is the function for sorting by numbers
+    if(filterStatus === "score"){
+      CardsCopy = CardsCopy.sort((a, b) => b.cardImportance - a.cardImportance);
+    }
+    if(filterStatus === "time"){
+      CardsCopy = CardsCopy.sort((a, b) => {
+        if(a.cardTime.match(/(\d+)/g)[0] === b.cardTime.match(/(\d+)/g)[0]){
+          if(a.cardTime.match(/(\d+)/g)[1] - b.cardTime.match(/(\d+)/g)[1]){
+            return 1;
+          }else{
+            return -1;
+          }
+        }
+        if(a.cardTime.match(/(\d+)/g)[0] - b.cardTime.match(/(\d+)/g)[0]){
+          return 1
+        }
+        if(b.cardTime.match(/(\d+)/g)[0] - a.cardTime.match(/(\d+)/g)[0]){
+          return -1
+        }
+      });
+    }
     // with card message
     return(
       <div className='cards__container'>
-        {cards.map((card) => {
+        {CardsCopy.map((card) => {
          if(editingIdCard !== card.id){
           return(
             <div key={card.id} className='card'>
@@ -259,6 +281,21 @@ function ShowWorks({ cards, setCards, editingIdCard, setEditingIdCard, editInput
   }
 }
 
+function FilterInput({ filterStatus, setFilterStatus }) {
+  return(
+    <form className='filterForm'>
+      <label for={"filterSelect"}>
+        you can use filter
+      </label>
+      <select value={filterStatus} id='filterSelect' onChange={(e) => {setFilterStatus(e.target.value)}}>
+        <option value={null}>no filter</option>
+        <option value={"score"}>by score</option>
+        <option value={"time"}>by time</option>
+      </select>
+    </form>
+  );
+}
+
 export default function FunctionalTODOList() {
   const [cards, setCards] = useState([]);
   const [id, setId] = useState(0);
@@ -275,6 +312,7 @@ export default function FunctionalTODOList() {
     cardTime: '', 
     cardExplanation: ''
   });
+  const [filterStatus, setFilterStatus] = useState(null);
 
   return(
     <div id={"todo__list"}>
@@ -285,6 +323,10 @@ export default function FunctionalTODOList() {
         setId={setId} 
         cards={cards} 
         setCards={setCards}/>
+      <FilterInput 
+        filterStatus={filterStatus}
+        setFilterStatus={setFilterStatus}
+      />
       <ShowWorks 
         cards={cards}
         setCards={setCards}
@@ -292,6 +334,7 @@ export default function FunctionalTODOList() {
         setEditingIdCard={setEditingIdCard}
         editInputsValue={editInputsValue}
         setEditInputsValue={setEditInputsValue}
+        filterStatus={filterStatus}
       />
     </div>
   );
