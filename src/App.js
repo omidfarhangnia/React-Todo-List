@@ -254,8 +254,7 @@ function FilterInput({ filterStatus, toChangeFilter }) {
   );
 }
 
-// recieve data
-
+// receive data
 
 function getCookie(cname) {
   let name = cname + "=";
@@ -292,8 +291,6 @@ export default function FunctionalTODOList() {
     cardExplanation: ''
   });
   const [filterStatus, setFilterStatus] = useState(null);  
-
-  // restore data
 
   function handleChangeCardValue(target) {
     setEditInputsValue({
@@ -385,6 +382,7 @@ export default function FunctionalTODOList() {
     }
   }
 
+  // restore data
   document.cookie = `cards=${JSON.stringify(cards)}`;
 
   return(
