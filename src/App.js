@@ -2,44 +2,8 @@ import './App.css';
 import { useState } from 'react';
 import ghostImage from "./image/ghost__image.jpg";
 
-function AddWorks({ inputsValue, setInputsValue, cards, setCards, id, setId }) {
+function AddWorks({ inputsValue, toAddNewCard, toSaveNewCard }) {
   const ImportanceOption = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
-
-  function handleChange(target) {
-    setInputsValue({
-      ...inputsValue,
-      [target.name]: target.value
-    })
-  }
-
-  function handleButtonClick(e) {
-    e.preventDefault();
-    if(!!inputsValue.titleInput &&
-      !!inputsValue.numberInput &&
-      !!inputsValue.selectInput){
-        setCards([
-          ...cards,
-          {
-            cardTitle: inputsValue.titleInput,
-            cardTime: inputsValue.numberInput,
-            cardExplanation: inputsValue.textAreaInput,
-            cardImportance: inputsValue.selectInput,
-            id: id
-          }
-        ])
-
-        setId(id + 1);
-        
-        setInputsValue({
-          titleInput: "",
-          numberInput: "",
-          textAreaInput: "",
-          selectInput: "",
-        });
-      }else{
-        alert("please fill 'work title', 'work time' and 'importance' (explanation is recommended).")
-      }
-  }
 
   return(
     <form className="Add__form">
@@ -52,7 +16,7 @@ function AddWorks({ inputsValue, setInputsValue, cards, setCards, id, setId }) {
         <input 
           value={inputsValue.titleInput} 
           name={"titleInput"} 
-          onChange={(e) => {handleChange(e.target)}} 
+          onChange={(e) => {toAddNewCard(e.target)}} 
           type={"text"} id={"title__input"}
         />
       </div>
@@ -66,7 +30,7 @@ function AddWorks({ inputsValue, setInputsValue, cards, setCards, id, setId }) {
           value={inputsValue.numberInput}
           name={"numberInput"}
           min="1" max="24" 
-          onChange={(e) => {handleChange(e.target)}} 
+          onChange={(e) => {toAddNewCard(e.target)}} 
           type={"time"} id={"time__input"}
         />
       </div>
@@ -79,7 +43,7 @@ function AddWorks({ inputsValue, setInputsValue, cards, setCards, id, setId }) {
         <textarea 
           value={inputsValue.textAreaInput}
           name={"textAreaInput"} 
-          onChange={(e) => {handleChange(e.target)}} 
+          onChange={(e) => {toAddNewCard(e.target)}} 
           id={"explanation__input"}
         >
         </textarea>
@@ -94,7 +58,7 @@ function AddWorks({ inputsValue, setInputsValue, cards, setCards, id, setId }) {
         <select 
           value={inputsValue.selectInput} 
           name={"selectInput"} 
-          onChange={(e) => {handleChange(e.target)}} 
+          onChange={(e) => {toAddNewCard(e.target)}} 
           id={"importance__input"}
         >
           <option value={null}>without choose</option>
@@ -102,7 +66,7 @@ function AddWorks({ inputsValue, setInputsValue, cards, setCards, id, setId }) {
         </select>
       </div>
       <button 
-        onClick={(e) => {handleButtonClick(e)}}
+        onClick={(e) => {toSaveNewCard(e)}}
       >
         add it
       </button>
@@ -110,14 +74,7 @@ function AddWorks({ inputsValue, setInputsValue, cards, setCards, id, setId }) {
   );
 }
 
-function ShowWorks({ cards, setCards, editingIdCard, setEditingIdCard, editInputsValue, setEditInputsValue, filterStatus }) {
-  function handleChangeNewCard(target) {
-    setEditInputsValue({
-      ...editInputsValue,
-      [target.name]: target.value
-    });
-  }
-
+function ShowWorks({ cards, editingCardId, setEditingCardId, editInputsValue, filterStatus, toChangeNewCard, toRemoveCard, toSaveEdit }) {
   if(cards.length === 0){
     // without card message
     return(
@@ -140,6 +97,7 @@ function ShowWorks({ cards, setCards, editingIdCard, setEditingIdCard, editInput
     }
     if(filterStatus === "time"){
       CardsCopy = CardsCopy.sort((a, b) => {
+        // add comments now
         let aHour = a.cardTime.match(/\d+(?=:)/g)[0][0] === "0" ? a.cardTime.match(/\d+(?=:)/g)[0][1] : a.cardTime.match(/\d+(?=:)/g)[0];
         let aMinute = a.cardTime.match(/\d+(?!:)$/g)[0][0] === "0" ? a.cardTime.match(/\d+(?!:)$/g)[0][1] : a.cardTime.match(/\d+(?!:)$/g)[0];
         
@@ -163,7 +121,7 @@ function ShowWorks({ cards, setCards, editingIdCard, setEditingIdCard, editInput
     return(
       <div className='cards__container'>
         {CardsCopy.map((card) => {
-         if(editingIdCard !== card.id){
+         if(editingCardId !== card.id){
           return(
             <div key={card.id} className='card'>
             <h3 className='card--header'>{card.cardTitle}</h3>
@@ -197,20 +155,14 @@ function ShowWorks({ cards, setCards, editingIdCard, setEditingIdCard, editInput
               <button 
                 className='card__setting--edit'
                 onClick={() => {
-                  setEditingIdCard(card.id)
+                  setEditingCardId(card.id)
                 }}
               >
                   edit
               </button>
               <button 
                 className='card__setting--remove'
-                onClick={(e) => {
-                  setCards(
-                    cards.filter(a => 
-                      a.id !== card.id
-                    )
-                  )
-                }}
+                onClick={(e) => {toRemoveCard(card.id)}}
               >
                 remove
               </button>
@@ -223,55 +175,29 @@ function ShowWorks({ cards, setCards, editingIdCard, setEditingIdCard, editInput
             <input 
               value={editInputsValue.cardTitle}
               name={"cardTitle"}
-              onChange={(e) => {handleChangeNewCard(e.target, card.id)}}
+              onChange={(e) => {toChangeNewCard(e.target, card.id)}}
             />
             <input 
               type={"number"} 
               min={0} max={10} 
               name={"cardImportance"}
               value={editInputsValue.cardImportance}
-              onChange={(e) => {handleChangeNewCard(e.target, card.id)}}
+              onChange={(e) => {toChangeNewCard(e.target, card.id)}}
             />
             <input 
               type={'time'}
               name={"cardTime"}
               value={editInputsValue.cardTime}
-              onChange={(e) => {handleChangeNewCard(e.target, card.id)}}
+              onChange={(e) => {toChangeNewCard(e.target, card.id)}}
             />
             <textarea 
               value={editInputsValue.cardExplanation}
               name={"cardExplanation"}
-              onChange={(e) => {handleChangeNewCard(e.target, card.id)}}
+              onChange={(e) => {toChangeNewCard(e.target, card.id)}}
             ></textarea>
             <div className='card__setting'>
               <button
-                onClick={() => {
-                  setEditingIdCard(null)
-
-                  let oldArrSituation;
-                  for(var i = 0; i < cards.length; i++){
-                    if(cards[i].id === card.id){
-                      oldArrSituation = i;
-                    }
-                  }
-
-                  // i want to clear my inputs
-                  setEditInputsValue({
-                      cardTitle: '', 
-                      cardImportance: '', 
-                      cardTime: '', 
-                      cardExplanation: ''
-                  })
-
-
-                  const newArr = [...cards];
-                  newArr[oldArrSituation] = editInputsValue
-
-
-                  setCards(newArr)
-
-                  console.log(oldArrSituation)
-                }}
+                onClick={() => {toSaveEdit(card.id)}}
               >
                 save
               </button>
@@ -285,13 +211,13 @@ function ShowWorks({ cards, setCards, editingIdCard, setEditingIdCard, editInput
   }
 }
 
-function FilterInput({ filterStatus, setFilterStatus }) {
+function FilterInput({ filterStatus, toChangeFilter }) {
   return(
     <form className='filterForm'>
       <label for={"filterSelect"}>
         you can use filter
       </label>
-      <select value={filterStatus} id='filterSelect' onChange={(e) => {setFilterStatus(e.target.value)}}>
+      <select value={filterStatus} id='filterSelect' onChange={(e) => {toChangeFilter(e.target.value)}}>
         <option value={null}>no filter</option>
         <option value={"score"}>by score</option>
         <option value={"time"}>by time</option>
@@ -303,7 +229,7 @@ function FilterInput({ filterStatus, setFilterStatus }) {
 export default function FunctionalTODOList() {
   const [cards, setCards] = useState([]);
   const [id, setId] = useState(0);
-  const [editingIdCard, setEditingIdCard] = useState(null);
+  const [editingCardId, setEditingCardId] = useState(null);
   const [inputsValue, setInputsValue] = useState({
     titleInput: "",
     numberInput: "",
@@ -318,27 +244,111 @@ export default function FunctionalTODOList() {
   });
   const [filterStatus, setFilterStatus] = useState(null);
 
+  function handleChangeCardValue(target) {
+    setEditInputsValue({
+      ...editInputsValue,
+      [target.name]: target.value
+    });
+  }
+
+  function handleChangeFilter(value) {
+    setFilterStatus(value)
+  }
+
+  function handleRemoveCard(cardId) {
+    setCards(
+      cards.filter(a => 
+        a.id !== cardId
+      )
+    )
+  }
+
+  function handleResetInputs() {
+    setEditInputsValue({
+      cardTitle: '', 
+      cardImportance: '', 
+      cardTime: '', 
+      cardExplanation: ''
+  })
+  }
+
+  function handleAddNewCard(target) {
+    setInputsValue({
+      ...inputsValue,
+      [target.name]: target.value
+    })
+  }
+
+  function handleSaveNewCard(e) {
+    e.preventDefault();
+    if(!!inputsValue.titleInput &&
+      !!inputsValue.numberInput &&
+      !!inputsValue.selectInput){
+        setCards([
+          ...cards,
+          {
+            cardTitle: inputsValue.titleInput,
+            cardTime: inputsValue.numberInput,
+            cardExplanation: inputsValue.textAreaInput,
+            cardImportance: inputsValue.selectInput,
+            id: id
+          }
+        ])
+
+        setId(id + 1);
+        
+        setInputsValue({
+          titleInput: "",
+          numberInput: "",
+          textAreaInput: "",
+          selectInput: "",
+        });
+      }else{
+        alert("please fill 'work title', 'work time' and 'importance' (explanation is recommended).")
+      }
+  }
+
+  function handleSaveEdit(cardId) {
+    setEditingCardId(null)
+
+    let oldArrSituation;
+    for(var i = 0; i < cards.length; i++){
+      if(cards[i].id === cardId){
+        oldArrSituation = i;
+      }
+    }
+
+    // i want to clear my inputs
+
+    handleResetInputs();
+
+    const newArr = [...cards];
+    newArr[oldArrSituation] = editInputsValue
+
+
+    setCards(newArr)
+  }
+
   return(
     <div id={"todo__list"}>
       <AddWorks 
         inputsValue={inputsValue} 
-        setInputsValue={setInputsValue} 
-        id={id} 
-        setId={setId} 
-        cards={cards} 
-        setCards={setCards}/>
+        toAddNewCard={handleAddNewCard}  
+        toSaveNewCard={handleSaveNewCard}
+      />
       <FilterInput 
         filterStatus={filterStatus}
-        setFilterStatus={setFilterStatus}
+        toChangeFilter={handleChangeFilter}
       />
       <ShowWorks 
         cards={cards}
-        setCards={setCards}
-        editingIdCard={editingIdCard}
-        setEditingIdCard={setEditingIdCard}
+        editingCardId={editingCardId}
+        setEditingCardId={setEditingCardId}
         editInputsValue={editInputsValue}
-        setEditInputsValue={setEditInputsValue}
         filterStatus={filterStatus}
+        toChangeNewCard={handleChangeCardValue}
+        toRemoveCard={handleRemoveCard}
+        toSaveEdit={handleSaveEdit}
       />
     </div>
   );
