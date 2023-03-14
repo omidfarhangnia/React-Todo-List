@@ -180,6 +180,7 @@ function ShowWorks({ cards, editingCardId, setEditingCardId, editInputsValue, fi
                   value={editInputsValue.cardTitle}
                   name={"cardTitle"}
                   id={"edit__title__input"}
+                  placeholder={card.cardTitle}
                   onChange={(e) => {toChangeNewCard(e.target, card.id)}}
                 />
               </div>
@@ -192,6 +193,7 @@ function ShowWorks({ cards, editingCardId, setEditingCardId, editInputsValue, fi
                   name={"cardTime"}
                   id={"edit__work__time"}
                   value={editInputsValue.cardTime}
+                  placeholder={card.cardTime}
                   onChange={(e) => {toChangeNewCard(e.target, card.id)}}
                 />
               </div>
@@ -203,6 +205,7 @@ function ShowWorks({ cards, editingCardId, setEditingCardId, editInputsValue, fi
                   value={editInputsValue.cardExplanation}
                   name={"cardExplanation"}
                   id={"edit__work__explanation"}
+                  placeholder={card.cardExplanation}
                   onChange={(e) => {toChangeNewCard(e.target, card.id)}}
                 />
               </div>
@@ -216,12 +219,13 @@ function ShowWorks({ cards, editingCardId, setEditingCardId, editInputsValue, fi
                   id={"edit__work__importance"}
                   name={"cardImportance"}
                   value={editInputsValue.cardImportance}
+                  placeholder={card.cardImportance}
                   onChange={(e) => {toChangeNewCard(e.target, card.id)}}
                 />
               </div>
               <div className='card__setting'>
                 <button
-                  onClick={() => {toSaveEdit(card.id)}}
+                  onClick={() => {toSaveEdit(card)}}
                 >
                   save
                 </button>
@@ -250,8 +254,29 @@ function FilterInput({ filterStatus, toChangeFilter }) {
   );
 }
 
+// recieve data
+
+
+function getCookie(cname) {
+  let name = cname + "=";
+  let decodedCookie = decodeURIComponent(document.cookie);
+  let ca = decodedCookie.split(';');
+  for(let i = 0; i <ca.length; i++) {
+    let c = ca[i];
+    while (c.charAt(0) == ' ') {
+      c = c.substring(1);
+    }
+    if (c.indexOf(name) == 0) {
+      return c.substring(name.length, c.length);
+    }
+  }
+  return "";
+}
+
+const initialWorks = JSON.parse(getCookie("cards"));
+
 export default function FunctionalTODOList() {
-  const [cards, setCards] = useState([]);
+  const [cards, setCards] = useState(initialWorks);
   const [id, setId] = useState(0);
   const [editingCardId, setEditingCardId] = useState(null);
   const [inputsValue, setInputsValue] = useState({
@@ -266,7 +291,9 @@ export default function FunctionalTODOList() {
     cardTime: '', 
     cardExplanation: ''
   });
-  const [filterStatus, setFilterStatus] = useState(null);
+  const [filterStatus, setFilterStatus] = useState(null);  
+
+  // restore data
 
   function handleChangeCardValue(target) {
     setEditInputsValue({
@@ -332,26 +359,33 @@ export default function FunctionalTODOList() {
       }
   }
 
-  function handleSaveEdit(cardId) {
-    setEditingCardId(null)
+  function handleSaveEdit(card) {
+    if(!!editInputsValue.cardTitle &&
+      !!editInputsValue.cardImportance &&
+      !!editInputsValue.cardTime) {
+        setEditingCardId(null)
 
-    let oldArrSituation;
-    for(var i = 0; i < cards.length; i++){
-      if(cards[i].id === cardId){
-        oldArrSituation = i;
-      }
+        let oldArrSituation;
+        for(var i = 0; i < cards.length; i++){
+          if(cards[i].id === card.id){
+            oldArrSituation = i;
+          }
+        }
+    
+        // i want to clear my inputs
+        handleResetInputs();
+    
+        const newArr = [...cards];
+        newArr[oldArrSituation] = editInputsValue
+    
+    
+        setCards(newArr)
+    }else{
+      alert("please fill 'work title', 'work time' and 'importance' (explanation is recommended).");
     }
-
-    // i want to clear my inputs
-
-    handleResetInputs();
-
-    const newArr = [...cards];
-    newArr[oldArrSituation] = editInputsValue
-
-
-    setCards(newArr)
   }
+
+  document.cookie = `cards=${JSON.stringify(cards)}`;
 
   return(
     <div id={"todo__list"}>
