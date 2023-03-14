@@ -222,3 +222,95 @@
   display: flex;
   justify-content: center;
 }
+
+/* filter part style */
+
+.filterForm{
+  border: 1px solid #ffffff;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 20px;
+  width: 70%;
+  margin: 0 auto;
+  margin-top: 30px;
+  border-radius: 50px;
+}
+
+.filterForm > label{
+  font-size: 17px;
+  margin-right: 10px;
+  text-transform: uppercase;
+  text-align: center;
+  color: #ffffff;
+  font-family: "Trebuchet MS", "Lucida Sans Unicode", "Lucida Grande", "Lucida Sans", Arial, sans-serif;
+}
+
+.filterForm > select{
+  all: unset;
+  width: 20%;
+  color: #0f0c29;
+  background: #ffffff;
+  font-size: 20px;
+  border: 1px solid #ffffff;
+  border-radius: 10px;
+  padding: 10px 15px;
+  font-family: "Trebuchet MS", "Lucida Sans Unicode", "Lucida Grande", "Lucida Sans", Arial, sans-serif;
+}
+
+.edit__status {
+  flex-direction: row;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.edit__status > div{
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 45%;
+}
+
+.textAreaEditor{
+  width: 100% !important;
+}
+
+.edit__status > div input, .edit__status > div textarea, .edit__status > div select {
+  all: unset;
+  color: #0f0c29;
+  background: #ffffff;
+  width: 70%;
+  font-size: 15px;
+  border: 1px solid #ffffff;
+  border-radius: 10px;
+  padding: 5px 10px;
+  font-family: "Trebuchet MS", "Lucida Sans Unicode", "Lucida Grande", "Lucida Sans", Arial, sans-serif;
+}
+
+.edit__status > div label {
+  color: #ffffff;
+  font-size: 15px;
+  text-align: center;
+  display: block;
+  margin: 0 auto;
+  font-family: "Trebuchet MS", "Lucida Sans Unicode", "Lucida Grande", "Lucida Sans", Arial, sans-serif;
+  width: 70%;
+  text-align: center;
+  text-transform: uppercase;
+  margin-bottom: 5px;
+}
+
+.textAreaEditor > label, .textAreaEditor > textarea{
+  width: 100% !important;
+}
+
+.edit__status > .card__setting > button{
+  all: unset;
+  background: #ffffff;
+  color: #0f0c29;
+  padding: 10px 20px;
+  font-size: 15px;
+  border-radius: 15px;
+  font-family: "Trebuchet MS", "Lucida Sans Unicode", "Lucida Grande", "Lucida Sans", Arial, sans-serif;
+}

@@ -171,37 +171,61 @@ function ShowWorks({ cards, editingCardId, setEditingCardId, editInputsValue, fi
           );
          }else{
           return(
-            <div key={card.id} className='card'>
-            <input 
-              value={editInputsValue.cardTitle}
-              name={"cardTitle"}
-              onChange={(e) => {toChangeNewCard(e.target, card.id)}}
-            />
-            <input 
-              type={"number"} 
-              min={0} max={10} 
-              name={"cardImportance"}
-              value={editInputsValue.cardImportance}
-              onChange={(e) => {toChangeNewCard(e.target, card.id)}}
-            />
-            <input 
-              type={'time'}
-              name={"cardTime"}
-              value={editInputsValue.cardTime}
-              onChange={(e) => {toChangeNewCard(e.target, card.id)}}
-            />
-            <textarea 
-              value={editInputsValue.cardExplanation}
-              name={"cardExplanation"}
-              onChange={(e) => {toChangeNewCard(e.target, card.id)}}
-            ></textarea>
-            <div className='card__setting'>
-              <button
-                onClick={() => {toSaveEdit(card.id)}}
-              >
-                save
-              </button>
-            </div>
+            <div key={card.id} className='card edit__status'>
+              <div>
+                <label for="edit__title__input">
+                  work title
+                </label>
+                <input 
+                  value={editInputsValue.cardTitle}
+                  name={"cardTitle"}
+                  id={"edit__title__input"}
+                  onChange={(e) => {toChangeNewCard(e.target, card.id)}}
+                />
+              </div>
+              <div>
+                <label for="edit__work__time">
+                  work time
+                </label>
+                <input 
+                  type={'time'}
+                  name={"cardTime"}
+                  id={"edit__work__time"}
+                  value={editInputsValue.cardTime}
+                  onChange={(e) => {toChangeNewCard(e.target, card.id)}}
+                />
+              </div>
+              <div className='textAreaEditor'>
+                <label for="edit__work__explanation">
+                  work explanation
+                </label>
+                <textarea 
+                  value={editInputsValue.cardExplanation}
+                  name={"cardExplanation"}
+                  id={"edit__work__explanation"}
+                  onChange={(e) => {toChangeNewCard(e.target, card.id)}}
+                />
+              </div>
+              <div>
+                <label for="edit__work__importance">
+                  importance
+                </label>
+                <input 
+                  type={"number"} 
+                  min={0} max={10} 
+                  id={"edit__work__importance"}
+                  name={"cardImportance"}
+                  value={editInputsValue.cardImportance}
+                  onChange={(e) => {toChangeNewCard(e.target, card.id)}}
+                />
+              </div>
+              <div className='card__setting'>
+                <button
+                  onClick={() => {toSaveEdit(card.id)}}
+                >
+                  save
+                </button>
+              </div>
             </div>
           );
          }
